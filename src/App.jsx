@@ -61,11 +61,15 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-      console.log("Error Found:", error)
+      console.log("Error Found during update:", error)
       setNotes(notes.filter(n => n.id !== id))
     })
 
     
+  }
+
+  if (!notes) {
+    return <div>Loading...</div>
   }
 
   // to allow input change. 

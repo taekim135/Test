@@ -4,7 +4,7 @@
 import axios from 'axios'
 
 // gets notes data from 3001
-const baseUrl = 'http://localhost:3001/api/notes'
+const baseUrl = '/api/notes'
 
 // const getAll = () => {
 //   const request = axios.get(baseUrl)

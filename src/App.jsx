@@ -1,6 +1,6 @@
-// Part 2 Concepts/ Examples
-// Part 2 Concepts/ Examples
-// Part 2 Concepts/ Examples
+// FRONT END EXAMPLE
+// npm run server
+// npm run dev
 
 import Footer from "./components/Footer"
 import {useState, useEffect} from "react"
@@ -12,7 +12,7 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote,setNewNote] = useState("a new note...")
   const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState("some error")
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const addNote = (event) => {
     event.preventDefault()

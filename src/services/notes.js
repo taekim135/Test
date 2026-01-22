@@ -1,10 +1,13 @@
 // notes route/api
 // all functions/features related to notes object
+//  Makes HTTP requests TO the backend
 
 import axios from 'axios'
 
 // gets notes data from 3001
-const baseUrl = '/api/notes'
+// /api/notes if full
+// /notes if frontend on its own
+const baseUrl = '/notes'
 
 // const getAll = () => {
 //   const request = axios.get(baseUrl)

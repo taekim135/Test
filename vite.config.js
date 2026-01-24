@@ -6,6 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      // frontend on its own = /notes
+      // + full = /api
       '/api': {
         target: 'http://localhost:3001',
         changeOrigin: true,

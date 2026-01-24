@@ -1,18 +1,21 @@
 // FRONT END EXAMPLE
-// npm run server
-// npm run dev
+// npm run dev on both back & front
 
 import Footer from "./components/Footer"
 import {useState, useEffect} from "react"
 import Note from "./components/Note"
 import noteService from './services/notes'
 import Notification from "./components/Notification"
+import loginService from "./services/login"
 
 const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote,setNewNote] = useState("a new note...")
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [user, setUser] = useState(null)
 
   const addNote = (event) => {
     event.preventDefault()
@@ -31,12 +34,91 @@ const App = () => {
       
   }
 
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
+    try{
+      // token + credentials saved to user state if successful
+      const user = await loginService.login({username, password})
+
+      // save token to browser's local storage 
+      // (harddrive but into browser's app folder)
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      )
+
+      noteService.setToken(user.token)
+      setUser(user)
+      setUsername("")
+      setPassword("")
+    }catch {
+      setErrorMessage("Incorrect username or password")
+      setTimeout(()=>{
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  //helper function to display login form
+  // only if the user is not logged in (user state is null)
+  const loginForm = () => (
+    
+      <form onSubmit={handleLogin}>
+        <div>
+          {/* for labeling input fields for screen readers & coders */}
+          <label> 
+            username
+            <input
+              type="text"
+              value={username}
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            password
+            <input
+              type="password"
+              value={password}
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </label>
+        </div>
+        <button type="submit">login</button>
+      </form>
+     
+  )
+
+  // only allow logged-in users to add new notes (user sate has value)
+  const noteForm = () => (
+    <form onSubmit={addNote}>
+        <input value = {newNote} onChange={handleNoteChange} />
+        <button type="submit">save</button>
+      </form>   
+  )
+
   useEffect(() => {
     noteService
     .getAll()
     .then(initialNotes=>{
       setNotes(initialNotes)
     })
+  }, [])
+
+
+  // when opening the page, check if user login details are saved
+  // if so, fetch and set the states
+  // otherwise let them login
+  // REMOVING LOGIN DETAILS = LOGOUT
+  //    .removeItem(itemName) or .clear()3
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
   }, [])
 
 
@@ -82,6 +164,18 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message = {errorMessage}/>
+      
+      {/* if user is null then execute loginForm */}
+      {!user && loginForm()}
+
+      {/* if user is logged in, show they are logged in */}
+      {user && (
+        <div>
+          <p>{user.name} logged in</p>
+          {noteForm()}
+        </div>
+      )}
+
       <div>
         {/* The event handler switches the value of showAll from true to false and vice versa: */}
         <button onClick={() => setShowAll(!showAll)}>
@@ -94,10 +188,6 @@ const App = () => {
           <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)}/>
         )}
       </ul>
-      <form onSubmit={addNote}>
-        <input value = {newNote} onChange={handleNoteChange} />
-        <button type="submit">save</button>
-      </form>   
       <Footer/>
     </div>
   )

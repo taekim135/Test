@@ -1,17 +1,22 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import {defineConfig} from "vite"
+import react from "@vitejs/plugin-react"
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    proxy: {
-      // frontend on its own = /notes
-      // + full = /api
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-      }
+    plugins: [react()],
+    server: {
+        proxy: {
+            // frontend on its own = /notes
+            // + full = /api
+            "/api": {
+                target: "http://localhost:3001",
+                changeOrigin: true,
+            }
+        }
+    },
+    test: {
+        environment: "jsdom",
+        globals: true, // no need to import keywords like describe, test and expect into the tests.
+        setupFiles: "testSetup.js",
     }
-  }
 })

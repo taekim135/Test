@@ -21,13 +21,13 @@ test("renders content", () => {
     // getByText -> by default looks for eact match
     // thus, ("String", {exact: false})
     // .getByTestId ->
-    // .queryByText -> same as getByText but no exception thrown when not found
+    // .queryByText -> same as getByText but no exception thrown when not found.
+    // ensures that something is not rendered. elements shouldn't exist
     // .findbyText -> returns a promise. Thus await screem.findByText()
     const element = screen.getByText("Component testing is done with react-testing-library")
 
     screen.debug(element)
     expect(element).toBeDefined()
-
 
     // BELOW using css selector to find elements
     const {container} = render(<Note note={note} />)

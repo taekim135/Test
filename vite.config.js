@@ -18,5 +18,9 @@ export default defineConfig({
         environment: "jsdom",
         globals: true, // no need to import keywords like describe, test and expect into the tests.
         setupFiles: "testSetup.js",
+        coverage: {
+            provider: 'v8', // or 'istanbul'
+            reporter: ['text', 'html']
+        }
     }
 })
